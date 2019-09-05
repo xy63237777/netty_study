@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'com.thesevensky'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.10.Final'
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.9.1'
+    compile group: 'com.google.protobuf', name: 'protobuf-java-util', version: '3.9.1'
+    compile group: 'org.apache.thrift', name: 'libthrift', version: '0.12.0'
+}
