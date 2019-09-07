@@ -15,7 +15,7 @@ public class ProtoBufInitializer extends ChannelInitializer<SocketChannel> {
         //4个内置的处理器 进行编解码
         pipeline.addLast(new ProtobufVarint32FrameDecoder());
         //对Person进行编解码
-        pipeline.addLast(new ProtobufDecoder(MyDataInfo.MyMessage.getDefaultInstance()));
+        //pipeline.addLast(new ProtobufDecoder(MyDataInfo.MyMessage.getDefaultInstance()));
         pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
         pipeline.addLast(new ProtobufEncoder());
 

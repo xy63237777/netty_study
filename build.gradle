@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.google.protobuf' version '0.8.8'
 }
 
 group 'com.thesevensky'
@@ -9,7 +10,11 @@ sourceCompatibility = 1.8
 
 
 repositories {
-    mavenCentral()
+    //mavenCentral()
+    maven {
+        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    }
+
 }
 
 dependencies {
@@ -17,4 +22,32 @@ dependencies {
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.9.1'
     compile group: 'com.google.protobuf', name: 'protobuf-java-util', version: '3.9.1'
     compile group: 'org.apache.thrift', name: 'libthrift', version: '0.12.0'
+    compile (
+            'io.grpc:grpc-netty-shaded:1.23.0',
+            'io.grpc:grpc-protobuf:1.23.0',
+            'io.grpc:grpc-stub:1.23.0'
+    )
+}
+
+
+protobuf {
+    //这是直接生成到src下
+    generateProtoTasks.generatedFilesBaseDir = "$projectDir/src/generated"
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.9.0"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.23.0'
+        }
+    }
+    generateProtoTasks { 
+        all()*.plugins {
+            grpc {
+                //这样就会把生成的gRpc的service类生成到java目录
+                setOutputSubDir 'java'
+            }
+        }
+
+    }
 }
