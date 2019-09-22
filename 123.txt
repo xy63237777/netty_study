@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#define READER_MAX 3
+#define WRITER_MAX 2
+
+pthread_rwlock_t rw_lock;
+
+void* writer_thread(void *arg);
+
+void* reader_thread(void *arg) {
+    while(1) {
+        if(pthread_rwlock_tryrdlock(&rw_lock)) {
+            printf("读 者%u暂时不能读取数据,\n", (unsigned int)pthread_self() );
+            sleep(1);
+        } else {
+            printf("读者 暂%u正在读取数据,\n", (unsigned int)pthread_self() );
+            sleep(1);
+            printf("读 者%u读取数据完毕,\n", (unsigned int)pthread_self() );
+            pthread_rwlock_unlock(&rw_lock);
+            sleep(2);
+        }
+    }
+}
+
+int main() {
+    pthread_t reader, writer;
+
+    int i = 0;
+
+    pthread_rwlock_init(&rw_lock, NULL);
+
+    for(int i = 0; i < READER_MAX; i++)
+        pthread_create(&reader, NULL, (void*)reader_thread, NULL);
+    for(int i = 0; i < WRITER_MAX; i++)
+        pthread_create(&writer, NULL, (void*)writer_thread, NULL);
+
+    sleep(10);
+    return 0;
+}
+void* writer_thread(void *arg) {
+    while(1) {
+        if(pthread_rwlock_trywrlock(&rw_lock)) {
+            printf("写 者%u暂时不能写入数据,\n", (unsigned int)pthread_self() );
+            sleep(2);
+        } else {
+            printf("写 者%u正在写入数据,\n", (unsigned int)pthread_self() );
+            sleep(2);
+            printf("写 者%u写入数据完毕,\n", (unsigned int)pthread_self() );
+            sleep(3);
+        }
+    }
+}
